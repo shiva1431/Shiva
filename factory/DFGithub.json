@@ -1,0 +1,9 @@
+{
+	"name": "DFGithub",
+	"location": "eastus",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "eecc8b9b-cdb6-47de-a1b1-e13460205ec3",
+		"tenantId": "bd3eeefe-e2f5-40d6-abc6-bbb9c8f48d03"
+	}
+}
