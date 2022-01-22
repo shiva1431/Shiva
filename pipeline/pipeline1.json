@@ -3,20 +3,73 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "Wait1",
-				"type": "Wait",
+				"name": "Stored procedure1",
+				"type": "SqlServerStoredProcedure",
 				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
 				"userProperties": [],
 				"typeProperties": {
-					"waitTimeInSeconds": 1
+					"storedProcedureName": "[dbo].[EinsteinViewHYCSENDMAIL]",
+					"storedProcedureParameters": {
+						"account_name": {
+							"value": "",
+							"type": "String"
+						},
+						"description": {
+							"value": "",
+							"type": "String"
+						},
+						"display_name": {
+							"value": "",
+							"type": "String"
+						},
+						"email_address": {
+							"value": "",
+							"type": "String"
+						},
+						"enable_ssl": {
+							"value": "",
+							"type": "Int32"
+						},
+						"mailserver_name": {
+							"value": "",
+							"type": "String"
+						},
+						"password": {
+							"value": "",
+							"type": "String"
+						},
+						"port": {
+							"value": "",
+							"type": "Int32"
+						},
+						"replyto_address": {
+							"value": "",
+							"type": "String"
+						},
+						"username": {
+							"value": "",
+							"type": "String"
+						}
+					}
+				},
+				"linkedServiceName": {
+					"referenceName": "linkedService1",
+					"type": "LinkedServiceReference"
 				}
 			},
 			{
-				"name": "Wait2",
-				"type": "Wait",
+				"name": "If Condition1",
+				"type": "IfCondition",
 				"dependsOn": [
 					{
-						"activity": "Wait1",
+						"activity": "Stored procedure1",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -24,7 +77,57 @@
 				],
 				"userProperties": [],
 				"typeProperties": {
-					"waitTimeInSeconds": 1
+					"ifTrueActivities": [
+						{
+							"name": "Lookup1",
+							"type": "Lookup",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "AzureSqlSource",
+									"sqlReaderQuery": "Declare @count int = 0\n\nselect @count = count(1)  from (\n\nselect Distinct A.Experiment_Title\n, A.Weight_period_name \n, A.[ToS [h]]],A.REACTOR,\ncount (A.[ToS [h]]]) _count from \n[HYC].[EinsteinViewHYC] A inner join  [HYC].[EinsteinViewHYC] B \non A.Experiment_Title=B.Experiment_Title \nAND A.Weight_period_name=B.Weight_period_name\nAND A.[ToS [h]]]!=B.[ToS [h]]]\nAnd A.REACTOR =B.Reactor\nwhere  A.[ToS [h]]]!=B.[ToS [h]]]\nGroup by A.Experiment_Title, A.Weight_period_name , A.[ToS [h]]],A.REACTOR\nHaving count (A.[ToS [h]]])>1\n\n\n)A\n\nif (@count > 0)\n\nprint 'Email triggered when there will be a same Experiment and Weight_period_name that has different time on stream \nwhich occurs more than once'\nelse\nprint 'No mail'\n",
+									"queryTimeout": "02:00:00",
+									"partitionOption": "None"
+								},
+								"dataset": {
+									"referenceName": "AzureSqlTable1",
+									"type": "DatasetReference"
+								},
+								"firstRowOnly": true
+							}
+						},
+						{
+							"name": "Web1",
+							"type": "WebActivity",
+							"dependsOn": [
+								{
+									"activity": "Lookup1",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"method": "POST"
+							}
+						}
+					]
 				}
 			}
 		],
