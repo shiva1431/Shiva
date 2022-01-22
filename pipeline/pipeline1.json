@@ -18,11 +18,11 @@
 					"storedProcedureName": "[dbo].[EinsteinViewHYCSENDMAIL]",
 					"storedProcedureParameters": {
 						"account_name": {
-							"value": "",
+							"value": "Shiva",
 							"type": "String"
 						},
 						"description": {
-							"value": "",
+							"value": "'Email triggered when there will be a same Experiment and Weight_period_name that has different time on stream \nwhich occurs more than once",
 							"type": "String"
 						},
 						"display_name": {
@@ -46,11 +46,11 @@
 							"type": "String"
 						},
 						"port": {
-							"value": "",
+							"value": "587",
 							"type": "Int32"
 						},
 						"replyto_address": {
-							"value": "",
+							"value": "shiva.v@shell.com",
 							"type": "String"
 						},
 						"username": {
