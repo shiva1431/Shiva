@@ -139,7 +139,9 @@
 							},
 							"userProperties": [],
 							"typeProperties": {
-								"method": "POST"
+								"url": "https://prod-159.westus.logic.azure.com:443/workflows/4843e2792fa541d38e0a71ab3ab78ed1/triggers/manual/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=YIlt0Ta9_3ERrY_DxoU92e0KvW2d_evivT5JaLzZ5Pk",
+								"method": "POST",
+								"body": "@activity('Lookup1').output"
 							}
 						}
 					]
